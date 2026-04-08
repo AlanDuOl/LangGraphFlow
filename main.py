@@ -1,34 +1,41 @@
 from langgraph.graph import StateGraph, END
 from agentstate import AgentState
-from agents.planner import planner_agent
-from agents.developer import developer_agent
-from agents.tester import tester_agent
-from langchain_core.messages import HumanMessage
+from agents.planner import planner_node
+from utils import extrair_especificacoes, salvar_artefatos
+from agents.developer import developer_node
+# from agents.tester import tester_node
 
-# Criando uma mensagem
-mensagem = [
-    HumanMessage(content="Explique o que é um ambiente virtual em Python de forma curta.")
-]
 
-# Chamada para o modelo
-resposta = planner_agent.invoke(mensagem)
+# Definição do estado inicial
+print("⚙️  Configurando o fluxo de desenvolvimento autônomo...")
 
-print(resposta.content)
+file_name = "spec"
+initial_state = {
+    "specs": extrair_especificacoes(file_name),
+    "iterations": 0,
+    "max_iterations": 3,
+    "history": [],
+    "success": False,
+    "language": "TypeScript",
+    "test_framework": "ts-jest"
+}
+config = {"configurable": {"thread_id": "1"}}
 
-"""
+
+# Definição do fluxo
 workflow = StateGraph(AgentState)
 
-# Adicionando os nós
-workflow.add_node("planner", planner_agent)
-workflow.add_node("developer", developer_agent)
-workflow.add_node("tester", tester_agent)
+## Adicionando os nós
+workflow.add_node("planner", planner_node)
+workflow.add_node("developer", developer_node)
+# workflow.add_node("tester", tester_node)
 
-# Definindo as conexões
+## Definindo as conexões
 workflow.set_entry_point("planner")
 workflow.add_edge("planner", "developer")
-workflow.add_edge("developer", "tester")
+# workflow.add_edge("developer", "tester")
 
-# Lógica Condicional (O "Coração" do seu fluxo)
+## Lógica Condicional (O "Coração" do seu fluxo)
 def route_after_test(state):
     if state["success"]:
         return "commit"
@@ -36,15 +43,31 @@ def route_after_test(state):
         return "fail"
     return "retry"
 
-workflow.add_conditional_edges(
-    "tester",
-    route_after_test,
-    {
-        "commit": END,
-        "retry": "planner", # Ou volta para o "developer" dependendo da estratégia
-        "fail": END
-    }
-)
+# workflow.add_conditional_edges(
+#     "tester",
+#     route_after_test,
+#     {
+#         "commit": END,
+#         "retry": "planner", # Ou volta para o "developer" dependendo da estratégia
+#         "fail": END
+#     }
+# )
 
 app = workflow.compile()
-"""
+
+
+# Execução
+print("🚀 Iniciando o fluxo de desenvolvimento autônomo...")
+resultado_final = app.invoke(initial_state, config)
+
+# Resultado
+print("--- FLUXO FINALIZADO ---")
+if resultado_final["code"]:
+    salvar_artefatos(resultado_final)
+    print("✅ Código implementado com sucesso!")
+# if resultado_final["success"]:
+#     salvar_artefatos(resultado_final)
+#     print("✅ Código implementado com sucesso!")
+else:
+    print("❌ O fluxo atingiu o limite de tentativas ou falhou.")
+    print(resultado_final)

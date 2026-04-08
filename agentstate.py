@@ -1,11 +1,17 @@
-from typing import TypedDict, List, Annotated
-import operator
+# from typing import TypedDict, List, Annotated
+# import operator
+from typing import TypedDict
 
 class AgentState(TypedDict):
-    objective: str
+    specs: str
     plan: str
     code: str
+    stub: str
+    test_code: str
     test_results: str
+    test_framework: str
+    language: str
     iterations: int
     max_iterations: int = 5
     success: bool
+    history: list

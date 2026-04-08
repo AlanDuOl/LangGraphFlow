@@ -18,5 +18,5 @@ Implementar um jogo em 2D em typescript.
     - Quando todas as celulas de uma linha estiverem preenchidas com partes dos blocos, essa linha é eliminada e as celulas a cima descem para se juntar às celulas abaixo ou ao fundo da tela.
     - Se mais de uma linha estiver completa ao mesmo tempo, todas devem ser eliminadas.
     - A cada linha eliminada o jogador soma 100 pontos.
-    - A cada 100 pontos acumulados pelo jogar a velocidade do bloco que está descendo aumenta 10%.
-    - O jogo acaba quando um bloco não couber na tela.
+    - A cada 100 pontos acumulados pelo jogar a velocidade do bloco que está descendo aumenta em 10%.
+    - O jogo acaba quando um bloco, após colidir, não couber na tela.
