@@ -25,7 +25,10 @@ Linguagem alvo: {language}"""),
 ])
 
 # Agente de Reasoning
-planner_agent = ChatOllama(model="gpt-oss:120b-cloud", temperature=0, reasoning=True)
+planner_agent = ChatOllama(model="gpt-oss:120b-cloud", temperature=0, reasoning=True).with_retry(
+    stop_after_attempt=3,  # Tenta até 3 vezes
+    wait_exponential_jitter=True # Espera cada vez mais entre as tentativas
+)
 
 
 def planner_node(state: AgentState):
