@@ -2,7 +2,7 @@
 
 ## Objetivo
 
-Implementar um jogo em 2D em typescript.
+Implementar um jogo em 2D em React/TypeScript.
 
 ## Regras de negócio
 

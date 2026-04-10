@@ -140,6 +140,8 @@ Ativar o ambiente:
     .venv\Scripts\activate
 Desativa o ambiente:
     deactivate
+Verificar se o ambiente virtual está ativo:
+    where python
 Gerar arquivos com dependencias:
     pip freeze > requirements.txt
 Recriar dependencias do ambiente:
