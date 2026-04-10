@@ -49,46 +49,50 @@ def salvar_logs(state, output_dir = "fail_logs"):
 def persistir_solucao_agente(state, base_folder="solution"):
     print("\n" + "="*10 + " ⚙️ PERSISTINDO ARTEFATOS " + "="*10)
 
-    # O conteúdo bruto vindo do Developer (contendo os comentários /* path */)
-    raw_content = state.get("code", "")
-    if not raw_content:
-        print("❌ Nenhum código encontrado no estado.")
-        salvar_logs(state)
-        return
+    # REMOVEMOS O 'STUB' DAQUI. 
+    # Agora só salvamos o que é código final ou teste real.
+    keys_to_scan = ["code", "test_code"] 
+    files_count = 0
 
-    # 1. Regex melhorado:
-    # Procura por /* caminho.extensao */ 
-    # O ([\w\/\.\-]+) garante que pegamos apenas caracteres válidos de caminhos
-    pattern = r"\/\*\s*([\w\/\.\-]+\.[a-zA-Z0-9]+)\s*\*\/\n(.*?)(?=\/\*|$)"
-    matches = re.findall(pattern, raw_content, re.DOTALL)
+    for key in keys_to_scan:
+        raw_content = state.get(key, "")
+        if not raw_content:
+            continue
+            
+        pattern = r"<([^>]+)>(.*?)</\1>"
+        matches = re.findall(pattern, raw_content, re.DOTALL)
 
-    if not matches:
-        print("⚠️ Formato de arquivo não reconhecido. Verifique as tags /* path */.")
-        salvar_logs(state)
-        return
+        for file_tag, file_content in matches:
+            # Proteção extra: ignorar tags estruturais
+            if file_tag.lower() in ["code", "test_code", "stub", "analise", "plano"]:
+                continue
 
-    for file_path, file_content in matches:
-        file_path = file_path.strip()
-        
-        # 2. Limpeza de segurança para evitar o OSError
-        # Remove quebras de linha ou espaços que a LLM possa ter inserido no nome
-        file_path = "".join(c for c in file_path if c not in '\r\n\t*?"<>|')
-        
-        file_content = file_content.strip()
-        
-        # 3. Remove tags de Markdown residuais (```ts) caso a LLM tenha falhado
-        file_content = re.sub(r"```[a-z]*\n?", "", file_content).replace("```", "").strip()
+            # Sanitização do caminho (Path)
+            file_path = file_tag.strip()
+            file_path = "".join(c for c in file_path if c not in '\r\n\t*?"<>|').strip()
+            
+            # Limpeza do conteúdo (Código)
+            content = file_content.strip()
+            # Remove qualquer Markdown acidental
+            content = re.sub(r"```[a-z]*\n?", "", content).replace("```", "").strip()
 
-        # 4. Construção do caminho
-        full_path = os.path.join(base_folder, file_path)
-        
-        try:
-            os.makedirs(os.path.dirname(full_path), exist_ok=True)
-            with open(full_path, "w", encoding="utf-8") as f:
-                f.write(file_content)
-            print(f"✅ Arquivo criado: {full_path}")
-        except OSError as e:
-            print(f"❌ Erro ao criar {full_path}: {e}")
+            full_path = os.path.join(base_folder, file_path)
+            
+            try:
+                os.makedirs(os.path.dirname(full_path), exist_ok=True)
+                with open(full_path, "w", encoding="utf-8") as f:
+                    f.write(content)
+                
+                # Feedback visual de sucesso
+                indicator = "✓" if content.endswith(('}', ';', '>')) else "!"
+                print(f"✅ [{key.upper()}] {indicator} Salvo: {file_path}")
+                files_count += 1
+            except Exception as e:
+                print(f"❌ Erro ao salvar {file_path}: {e}")
 
+    if files_count == 0:
+        print("⚠️ Atenção: Nenhum arquivo detectado nas tags XML.")
+    else:
+        print(f"\n🚀 Sucesso: {files_count} arquivos sincronizados no disco.")
+    
     print("="*35 + "\n")
-

@@ -6,19 +6,18 @@ from utils import extrair_conteudo_tag
 # O Prompt do Planner com as tags que discutimos
 planner_prompt_template = ChatPromptTemplate.from_messages([
     ("system", """Você é um Engenheiro de Software Sênior (Reasoning Mode).
-Sua tarefa é analisar as ESPECIFICAÇÕES e erros anteriores (quando houver) para criar um plano de ação de implementação do código, 
-gerar um script de testes unitários completo usando {test_framework} e um stub (esqueleto do código) das classes e funções a serem criadas 
-e usadas nos testes unitários.
+Sua tarefa é analisar as ESPECIFICAÇÕES e erros anteriores para criar um plano de ação, um script de testes unitários em {test_framework} e um stub (esqueleto) das classes/funções.
 
-Ao elaborar o plano, certifique-se de que a arquitetura siga padrões de projeto consolidados. 
-Identifique no plano quais constantes devem ser criadas para evitar valores fixos (magic numbers) no corpo das funções.
-Siga os princípios de Clean Architecture, separando a lógica de negócio das dependências externas.
-
-DIRETRIZES:
-1. Analise a falha se houver um log de erro.
-2. Responda SEMPRE usando as tags <analise> para seu raciocínio e <plano> para os passos.
-3. Coloque o código de teste entre as tags <test_code>.
-4. Coloque o stub entre as tags <stub>.
+DIRETRIZES DE FORMATAÇÃO (OBRIGATÓRIO):
+1. Use <analise> para seu raciocínio e <plano> para os passos técnicos.
+2. Dentro de <test_code> e <stub>, você deve envolver CADA arquivo em uma tag XML com seu caminho completo.
+   Exemplo:
+   <tests/engine.test.ts>
+   describe('Test', () => {{ ... }});
+   </tests/engine.test.ts>
+3. PROIBIDO: Não use blocos de código Markdown (```ts). Apenas as tags de caminho.
+4. Sempre utilize o alias @/ para se referir à pasta src/, garantindo que os imports funcionem em qualquer nível de profundidade.
+5. Use Clean Architecture e evite magic numbers.
 
 Linguagem alvo: {language}"""),
     ("user", "ESPECIFICAÇÕES: {specs}\n\nLogs de Erros Anteriores:\n{test_results}")

@@ -6,30 +6,37 @@ from utils import extrair_conteudo_tag
 
 developer_prompt_template = ChatPromptTemplate.from_messages([
     ("system", """Você é um Desenvolvedor Senior especializado em {language}.
-Sua tarefa é consolidar o Plano, os Testes e os Stubs em uma implementação COMPLETA e funcional.
+Sua tarefa é consolidar o Plano, os Testes e os Stubs em uma implementação COMPLETA.
 
-REGRAS DE OURO PARA ARTEFATOS:
-1. Você deve entregar TODOS os arquivos (Código de Produção + Testes + Configurações) dentro de um ÚNICO par de tags <code> e </code>.
-2. Cada arquivo individual DEVE começar com o comentário exatamente assim: /* caminho/do/arquivo */
-3. Não inclua Markdown (como ```ts) dentro das tags <code>. Apenas texto puro de código.
-4. Não inclua explicações ou texto introdutório. O retorno deve ser exclusivamente o bloco <code>.
+IMPORTANTE: Os insumos 'REFERÊNCIA DE TESTES' e 'ESTRUTURA DE STUBS' já estão formatados em tags XML de caminho (ex: <path/file.ts>). 
+Sua função é usar esses modelos para escrever o código REAL e funcional, mantendo ou refinando essa mesma estrutura de tags.
+
+REGRAS DE FORMATAÇÃO ESTRUTURAL (CRÍTICO):
+1. Você deve entregar o resultado final unificado dentro de um par de tags <code> e </code>.
+2. Dentro de <code>, envolva cada arquivo (produção e teste) em sua respectiva tag de caminho.
+   Exemplo:
+   <src/domain/Board.ts>
+   export class Board {{ ... }}
+   </src/domain/Board.ts>
+
+3. PROIBIDO: Não use blocos de código Markdown (```ts).
+4. INTEGRALIDADE: Garanta que o código esteja completo, sem "stubs" ou comentários de "implemente aqui". Todas as chaves de fechamento devem estar dentro das tags.
 
 DIRETRIZES TÉCNICAS:
-- Constantes em UPPER_CASE.
-- Respeite rigorosamente as assinaturas definidas no STUB para que os TESTES passem.
-- Siga as melhores práticas de {language} e os padrões de projeto mencionados no plano."""),
-    ("user", """Combine os seguintes elementos em uma estrutura de arquivos completa:
+- Mantenha paridade total com as assinaturas do STUB.
+- Implemente a lógica para que os arquivos passem nos TESTES fornecidos."""),
+    ("user", """Gere a implementação final unificada (Código + Testes) baseada nestes insumos:
 
 PLANO DE AÇÃO:
 {plan}
 
-REFERÊNCIA DE TESTES (Siga estas nomenclaturas):
+REFERÊNCIA DE TESTES (Já em formato de tags):
 {test_code}
 
-ESTRUTURA DE STUBS (Siga estas assinaturas):
+ESTRUTURA DE STUBS (Já em formato de tags):
 {stub}
 
-Entregue agora todos os arquivos unificados entre as tags <code> e </code>.""")
+Lembre-se: O output deve ser apenas o bloco <code> contendo todos os arquivos individuais em suas tags.""")
 ])
 
 # Agente Developer
