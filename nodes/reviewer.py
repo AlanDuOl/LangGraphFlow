@@ -1,10 +1,15 @@
-import difflib
 import os
+import difflib
+import shutil
 from agentstate import AgentState
 from utils import persistir_solucao_agente
 
 
-def human_review_node(state: AgentState):
+def review_node(state: AgentState):
+    # Verifica se os testes passaram antes de persistir os arquivos
+    if not state["pass_tests"]:
+        return state
+    
     # CRITICAL: O estado PRECISA ser persistido em 'gen' antes da comparação
     # Se você não persistir, o loop abaixo lerá o que já estava lá, não o que o agente acabou de fazer.
     persistir_solucao_agente(state)
@@ -75,6 +80,16 @@ def human_review_node(state: AgentState):
                 with open(p_src, 'w', encoding='utf-8') as f_src:
                     f_src.write(content)
         print("✔️  Sincronização concluída!")
+        
+        # --- Excluir solução gerada ---
+        print(f"🧹 Removendo arquivos temporários em: {state['gen_dir']}...")
+        try:
+            shutil.rmtree(gen_base)
+            # Opcional: Recriar a pasta vazia se os nós anteriores esperarem que ela exista
+            # os.makedirs(gen_base, exist_ok=True)
+        except Exception as e:
+            print(f"⚠️ Erro ao limpar pasta gen: {e}")
+            
         state["success"] = True
     else:
         print("❌ Sincronização cancelada. O estado 'success' permanece False.")

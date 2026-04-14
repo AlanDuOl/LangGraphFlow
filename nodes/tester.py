@@ -4,7 +4,7 @@ import os
 
 
 # Agente Tester
-# tester_agent = ChatOllama(model="gemma3:27b-cloud", temperature=0)
+tester_agent = ChatOllama(model="gemma3:27b-cloud", temperature=0)
 
 
 def tester_node(state: AgentState):
@@ -16,7 +16,7 @@ def tester_node(state: AgentState):
 
     return {
         "test_results": logs,
-        "success": success,
+        "pass_tests": success,
         "iterations": state["iterations"] + 1
     }
 
