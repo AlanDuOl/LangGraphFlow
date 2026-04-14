@@ -46,7 +46,7 @@ def salvar_logs(state, output_dir = "fail_logs"):
         print(f"✅ Artefato de teste criado em: {output_dir}/{test_file}.py")
 
 
-def persistir_solucao_agente(state, base_folder="solution"):
+def persistir_solucao_agente(state, base_folder="gen"):
     print("\n" + "="*10 + " ⚙️ PERSISTINDO ARTEFATOS " + "="*10)
 
     # REMOVEMOS O 'STUB' DAQUI. 

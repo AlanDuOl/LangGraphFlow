@@ -15,3 +15,5 @@ class AgentState(TypedDict):
     max_iterations: int = 5
     success: bool
     history: list
+    gen_dir: str
+    src_dir: str

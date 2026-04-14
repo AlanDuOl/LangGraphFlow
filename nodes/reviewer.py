@@ -5,36 +5,57 @@ from utils import persistir_solucao_agente
 
 
 def human_review_node(state: AgentState):
-    
-    # 1. Persiste o código do estado na pasta
+    # CRITICAL: O estado PRECISA ser persistido em 'gen' antes da comparação
+    # Se você não persistir, o loop abaixo lerá o que já estava lá, não o que o agente acabou de fazer.
     persistir_solucao_agente(state)
 
     print("\n" + "⚙️" * 5 + "  MODO DE REVISÃO HUMANA (DELTA) " + "⚙️" * 5)
-    state["success"] = True
-    return state
-'''
+    
     has_changes = False
     files_to_sync = []
 
-    # 2. Varre a pasta 'gen' para comparar com 'src'
-    for root, _, files in os.walk("gen"):
+    # Caminhos absolutos para evitar erros de replace
+    gen_base = os.path.abspath(state["gen_dir"])
+    src_base = os.path.abspath(state["src_dir"])
+
+    for root, _, files in os.walk(gen_base):
         for file in files:
             path_gen = os.path.join(root, file)
-            path_src = path_gen.replace("gen", "src", 1)
+            # Calcula o caminho relativo para replicar em 'src'
+            rel_path = os.path.relpath(path_gen, gen_base)
+            path_src = os.path.join(src_base, rel_path)
             
-            # Mostra o Delta no terminal
             if os.path.exists(path_src):
-                with open(path_src, 'r') as f1, open(path_gen, 'r') as f2:
-                    diff = list(difflib.unified_diff(f1.readlines(), f2.readlines()))
+                with open(path_src, 'r', encoding='utf-8') as f1, \
+                     open(path_gen, 'r', encoding='utf-8') as f2:
+                    
+                    # strip() ajuda a ignorar diferenças de apenas uma linha vazia no fim
+                    lines_src = f1.readlines()
+                    lines_gen = f2.readlines()
+                    
+                    diff = list(difflib.unified_diff(
+                        lines_src, lines_gen, 
+                        fromfile=f'src/{rel_path}', 
+                        tofile=f'src/{rel_path}',
+                        lineterm=''
+                    ))
+
                     if diff:
-                        print(f"\n📄 Alterações em: {path_src}")
+                        # O diff traz metadados nas primeiras 2-3 linhas, 
+                        # verificamos se há conteúdo real além dos headers
+                        print(f"\n📄 Alterações em: {rel_path}")
                         for line in diff:
-                            if line.startswith('+'): print(f"\033[92m{line}\033[0m", end="")
-                            elif line.startswith('-'): print(f"\033[91m{line}\033[0m", end="")
+                            if line.startswith('+') and not line.startswith('+++'):
+                                print(f"\033[92m{line}\033[0m") # Verde
+                            elif line.startswith('-') and not line.startswith('---'):
+                                print(f"\033[91m{line}\033[0m") # Vermelho
+                            elif line.startswith('@@'):
+                                print(f"\033[36m{line}\033[0m") # Ciano (Header do bloco)
+                        
                         has_changes = True
                         files_to_sync.append((path_gen, path_src))
             else:
-                print(f"\n🆕 Novo arquivo detectado: {path_src}")
+                print(f"\n🆕 Novo arquivo detectado: {rel_path}")
                 has_changes = True
                 files_to_sync.append((path_gen, path_src))
 
@@ -43,18 +64,20 @@ def human_review_node(state: AgentState):
         state["success"] = True
         return state
 
-    # 3. Bloqueia a execução esperando seu input (Ideal para as 15h)
     confirmacao = input("\n🚀 Deseja aplicar os deltas acima na pasta /src? (s/n): ")
     
     if confirmacao.lower() == 's':
         for p_gen, p_src in files_to_sync:
             os.makedirs(os.path.dirname(p_src), exist_ok=True)
-            with open(p_gen, 'r') as f_src, open(p_src, 'w') as f_dst:
-                f_dst.write(f_src.read())
-        print("✔️ Sincronização concluída!")
+            # Usar shutil ou escrita direta
+            with open(p_gen, 'r', encoding='utf-8') as f_gen:
+                content = f_gen.read()
+                with open(p_src, 'w', encoding='utf-8') as f_src:
+                    f_src.write(content)
+        print("✔️  Sincronização concluída!")
         state["success"] = True
     else:
-        print("❌ Sincronização cancelada pelo usuário.")
+        print("❌ Sincronização cancelada. O estado 'success' permanece False.")
+        state["success"] = False # Importante para o LangGraph decidir o próximo passo
 
     return state
-'''

@@ -19,7 +19,9 @@ initial_state = {
     "history": [],
     "success": False,
     "language": "TypeScript",
-    "test_framework": "ts-jest"
+    "test_framework": "ts-jest",
+    "gen_dir": "gen",
+    "src_dir": "C:\\Users\\111967\\Projects\\Estudo\\test"
 }
 config = {"configurable": {"thread_id": "1"}}
 
@@ -73,7 +75,7 @@ resultado_final = app.invoke(initial_state, config)
 print("--- FLUXO FINALIZADO ---")
 if resultado_final["success"]:
     print("✅ Código implementado com sucesso!")
-    print(resultado_final)
+    # print(resultado_final)
 else:
     print("❌ O fluxo atingiu o limite de tentativas ou falhou.")
     print(resultado_final)
