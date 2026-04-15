@@ -3,7 +3,7 @@ from agentstate import AgentState
 from nodes.planner import planner_node
 from nodes.developer import developer_node
 from nodes.reviewer import review_node
-from agents.tester import tester_node
+from nodes.tester import tester_node
 from utils import extrair_especificacoes
 
 
@@ -18,11 +18,10 @@ initial_state = {
     "source_repository_path": "",
     "history": [],
     "success": False,
-    "pass_tests": False,
     "language": "TypeScript",
     "test_framework": "ts-jest",
     "gen_dir": "gen",
-    "src_dir": "test"
+    "src_dir": "C:\\Users\\111967\\Projects\\Estudo\\test"
 }
 config = {"configurable": {"thread_id": "1"}}
 

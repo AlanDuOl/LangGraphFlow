@@ -7,7 +7,7 @@ from utils import persistir_solucao_agente
 
 def review_node(state: AgentState):
     # Verifica se os testes passaram antes de persistir os arquivos
-    if not state["pass_tests"]:
+    if not state["success"]:
         return state
     
     # CRITICAL: O estado PRECISA ser persistido em 'gen' antes da comparação
@@ -85,6 +85,7 @@ def review_node(state: AgentState):
         print(f"🧹 Removendo arquivos temporários em: {state['gen_dir']}...")
         try:
             shutil.rmtree(gen_base)
+            print(f"🧹 Arquivos temporários removidos em: {state['gen_dir']}...")
             # Opcional: Recriar a pasta vazia se os nós anteriores esperarem que ela exista
             # os.makedirs(gen_base, exist_ok=True)
         except Exception as e:

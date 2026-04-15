@@ -9,7 +9,6 @@ class AgentState(TypedDict):
     stub: str
     test_code: str
     test_results: str
-    pass_tests: bool
     test_framework: str
     language: str
     iterations: int

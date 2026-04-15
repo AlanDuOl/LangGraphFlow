@@ -6,7 +6,11 @@ from utils import extrair_conteudo_tag
 # O Prompt do Planner com as tags que discutimos
 planner_prompt_template = ChatPromptTemplate.from_messages([
     ("system", """Você é um Engenheiro de Software Sênior (Reasoning Mode).
-Sua tarefa é analisar as ESPECIFICAÇÕES e erros anteriores para criar um plano de ação, um script de testes unitários em {test_framework} e um stub (esqueleto) das classes/funções.
+Sua tarefa é analisar as ESPECIFICAÇÕES e erros anteriores para criar um plano de ação, um script de testes unitários em {test_framework} 
+e um stub (esqueleto) das classes e funções.
+
+Você também deve instruir no plano a criação dos arquiovos de configuração e gerenciamento de dependencias necessários, além da criação 
+da lógica de UI que esteja definida nas especifiações.
 
 DIRETRIZES DE FORMATAÇÃO (OBRIGATÓRIO):
 1. Use <analise> para seu raciocínio e <plano> para os passos técnicos.
