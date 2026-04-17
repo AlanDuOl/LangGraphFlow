@@ -2,7 +2,7 @@
 
 ## 1. Objetivo
 
-Implementar um jogo 2D funcional utilizando React e TypeScript no frontend, com uma estrutura preparada para integração com Node.js.
+Implementar um jogo 2D funcional utilizando React com vite e TypeScript no frontend, com uma estrutura preparada para integração com Node.js.
 
 ## 2. Arquitetura e Padrões
 
@@ -30,19 +30,31 @@ Toda a implementação deve respeitar a seguinte árvore de diretórios:
     ├── domain/                # Testes de Entidades
     └── application/           # Testes de Casos de Uso
 
-Regras de Importação: - Os arquivos dentro de tests/domain/ devem utilizar caminhos relativos para acessar src/. Ex: import { Board }
-from '../../../src/domain/entities/Board'.
-
+Regras de Importação:
+    - Sempre utilize o alias @/ para se referir à pasta src/, garantindo que os imports funcionem em qualquer nível de profundidade.
+    - Não faça imports com @/src, @/ iquivale a @/src.
     - Os imports devem ser precisos conforme a profundidade do arquivo na árvore acima.
 
-## 4. Regras de Negócio
+## 4. Configurações
+
+    - Implemente a lógica de UI dentro da pasta infra.
+    - Crio o arquivo index.tsx como ponto de partida do componentes .tsx.
+    - Se usar arquivos .css configure o typescript para reconhecer esse tipo de extensão criando um arquivo de tipos.
+    - Crie o arquivo package.json com as configurações de execução e gerenciamento de dependencias.
+    - Crie o arquivo de configurações do TypeScript:
+        - Configure no arquivo tsconfig o alias @/ para se refererir a pasta src.
+
+    - Crie o arquivo de configurações do jest para execução dos testes unitários.
+
+## 5. Regras de Negócio
 
     - Mecânica de Queda: Um bloco de cada vez desce do topo e para ao colidir com o fundo ou com celulás já preenchidas.
     - Os blocos têm formatos (Tetrominos): Inicialmente 4 tipos: O (quadrado), L, I e Z. Cada bloco possui exatamente 4 células.
     - Uma célula é um retangulo perfeito.
     - Rotação: O bloco rotaciona em torno de seu eixo central, validando colisão com bordas e blocos fixos antes de confirmar o movimento.
     - Tabuleiro: Dimensões fixas de 8 células de largura por 24 de altura.
-    - Controle de Velocidade: - Velocidade inicial: 1 célula/segundo.
+    - Controle de Velocidade: 
+        - Velocidade inicial: 1 célula/segundo.
         - Aceleração manual: até 10x a velocidade atual.
         - Progressão: A cada 100 pontos, a velocidade base aumenta em 10%.
 

@@ -9,8 +9,8 @@ planner_prompt_template = ChatPromptTemplate.from_messages([
 Sua tarefa é analisar as ESPECIFICAÇÕES e erros anteriores para criar um plano de ação, um script de testes unitários em {test_framework} 
 e um stub (esqueleto) das classes e funções.
 
-Você também deve instruir no plano a criação dos arquiovos de configuração e gerenciamento de dependencias necessários, além da criação 
-da lógica de UI que esteja definida nas especifiações.
+Você também deve instruir no plano a criação de arquivos de configuração e gerenciamento de dependencias necessários e criação 
+da lógica de UI caso estajam definidos nas especifiações.
 
 DIRETRIZES DE FORMATAÇÃO (OBRIGATÓRIO):
 1. Use <analise> para seu raciocínio e <plano> para os passos técnicos.
@@ -20,8 +20,7 @@ DIRETRIZES DE FORMATAÇÃO (OBRIGATÓRIO):
    describe('Test', () => {{ ... }});
    </tests/engine.test.ts>
 3. PROIBIDO: Não use blocos de código Markdown (```ts). Apenas as tags de caminho.
-4. Sempre utilize o alias @/ para se referir à pasta src/, garantindo que os imports funcionem em qualquer nível de profundidade.
-5. Use Clean Architecture e evite magic numbers.
+4. Use Clean Architecture e evite magic numbers.
 
 Linguagem alvo: {language}"""),
     ("user", "ESPECIFICAÇÕES: {specs}\n\nLogs de Erros Anteriores:\n{test_results}")
