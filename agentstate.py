@@ -17,3 +17,4 @@ class AgentState(TypedDict):
     history: list
     gen_dir: str
     src_dir: str
+    solucao_gerada: bool

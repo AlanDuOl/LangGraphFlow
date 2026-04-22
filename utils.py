@@ -49,6 +49,8 @@ def salvar_logs(state, output_dir = "fail_logs"):
 def persistir_solucao_agente(state, base_folder="gen"):
     print("\n" + "="*10 + " ⚙️ PERSISTINDO ARTEFATOS " + "="*10)
 
+    arquivosPersistido = True
+    
     # REMOVEMOS O 'STUB' DAQUI. 
     # Agora só salvamos o que é código final ou teste real.
     keys_to_scan = ["code", "test_code"] 
@@ -89,10 +91,14 @@ def persistir_solucao_agente(state, base_folder="gen"):
                 files_count += 1
             except Exception as e:
                 print(f"❌ Erro ao salvar {file_path}: {e}")
+                arquivosPersistido = False
 
     if files_count == 0:
         print("⚠️ Atenção: Nenhum arquivo detectado nas tags XML.")
+        arquivosPersistido = False
     else:
         print(f"\n🚀 Sucesso: {files_count} arquivos sincronizados no disco.")
     
     print("="*35 + "\n")
+    
+    return arquivosPersistido

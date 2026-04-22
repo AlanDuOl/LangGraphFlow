@@ -2,8 +2,9 @@ from langgraph.graph import StateGraph, END
 from agentstate import AgentState
 from nodes.planner import planner_node
 from nodes.developer import developer_node
-from nodes.reviewer import review_node
+from nodes.persistence import persistence_node
 from nodes.tester import tester_node
+from nodes.reviewer import review_node
 from utils import extrair_especificacoes
 
 
@@ -14,14 +15,15 @@ file_name = "spec"
 initial_state = {
     "specs": extrair_especificacoes(file_name),
     "iterations": 0,
-    "max_iterations": 3,
+    "max_iterations": 1,
     "source_repository_path": "",
     "history": [],
     "success": False,
     "language": "TypeScript",
     "test_framework": "ts-jest",
     "gen_dir": "gen",
-    "src_dir": "C:\\Users\\111967\\Projects\\Estudo\\test"
+    "src_dir": "C:\\Users\\111967\\Projects\\Estudo\\test",
+    "solucao_gerada": False
 }
 config = {"configurable": {"thread_id": "1"}}
 
@@ -32,13 +34,15 @@ workflow = StateGraph(AgentState)
 ## Adicionando os nós
 workflow.add_node("planner", planner_node)
 workflow.add_node("developer", developer_node)
+workflow.add_node("persistence", persistence_node)
 workflow.add_node("tester", tester_node)
 workflow.add_node("reviewer", review_node)
 
 ## Definindo as conexões
 workflow.set_entry_point("planner")
 workflow.add_edge("planner", "developer")
-workflow.add_edge("developer", "tester")
+workflow.add_edge("developer", "persistence")
+workflow.add_edge("persistence", "tester")
 workflow.add_edge("tester", "reviewer")
 workflow.add_edge("reviewer", END)
 
