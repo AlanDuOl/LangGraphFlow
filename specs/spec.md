@@ -41,10 +41,10 @@ Regras de Importação:
     - Crio o arquivo index.tsx como ponto de partida do componentes .tsx.
     - Se usar arquivos .css configure o typescript para reconhecer esse tipo de extensão criando um arquivo de tipos.
     - Crie o arquivo package.json com as configurações de execução e gerenciamento de dependencias.
+    - Adicione a dependencia ts-node no package.json.
     - Crie o arquivo de configurações do TypeScript:
         - Configure no arquivo tsconfig o alias @/ para se refererir a pasta src.
-
-    - Crie o arquivo de configurações do jest para execução dos testes unitários.
+    - Crie apenas o arquivo de configurações jest.config.ts para execução dos testes unitários pelo jest.
 
 ## 5. Regras de Negócio
 

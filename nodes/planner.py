@@ -60,18 +60,3 @@ def planner_node(state: AgentState):
         "test_code": test_code,
         "history": state["history"] + [f"Análise: {analise}"]
     }
-
-
-'''
-from langchain_core.messages import HumanMessage, SystemMessage
-
-
-# Criando uma mensagem
-mensagem = [
-    HumanMessage(content="Explique o que é um ambiente virtual em Python de forma curta.")
-]
-
-# Chamada para o modelo
-resposta = planner_agent.invoke(mensagem)
-print(resposta.content)
-'''

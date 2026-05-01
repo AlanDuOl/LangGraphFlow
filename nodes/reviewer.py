@@ -2,17 +2,12 @@ import os
 import difflib
 import shutil
 from agentstate import AgentState
-from utils import persistir_solucao_agente
 
 
 def review_node(state: AgentState):
     # Verifica se os testes passaram antes de persistir os arquivos
     if not state["success"]:
         return state
-    
-    # CRITICAL: O estado PRECISA ser persistido em 'gen' antes da comparação
-    # Se você não persistir, o loop abaixo lerá o que já estava lá, não o que o agente acabou de fazer.
-    persistir_solucao_agente(state)
 
     print("\n" + "⚙️" * 5 + "  MODO DE REVISÃO HUMANA (DELTA) " + "⚙️" * 5)
     
