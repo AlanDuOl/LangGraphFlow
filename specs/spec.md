@@ -40,10 +40,12 @@ Regras de Importação:
     - Implemente a lógica de UI dentro da pasta infra.
     - Crio o arquivo index.tsx como ponto de partida do componentes .tsx.
     - Se usar arquivos .css configure o typescript para reconhecer esse tipo de extensão criando um arquivo de tipos.
-    - Crie o arquivo package.json com as configurações de execução e gerenciamento de dependencias.
-    - Adicione a dependencia ts-node no package.json.
+    - Crie o arquivo package.json com as configurações de execução e gerenciamento de dependencias:
+        - Adicione a dependencia ts-node no package.json.
+        - Adicione a dependencia jest-environment-jsdom no package.json.
     - Crie o arquivo de configurações do TypeScript:
         - Configure no arquivo tsconfig o alias @/ para se refererir a pasta src.
+        - Adicione a opção ignoreDeprecations": "6.0" no arquivo de configurações do typescript.
     - Crie apenas o arquivo de configurações jest.config.ts para execução dos testes unitários pelo jest.
 
 ## 5. Regras de Negócio

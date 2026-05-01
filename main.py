@@ -15,14 +15,14 @@ file_name = "spec"
 initial_state = {
     "specs": extrair_especificacoes(file_name),
     "iterations": 0,
-    "max_iterations": 1,
+    "max_iterations": 2,
     "source_repository_path": "",
     "history": [],
     "success": False,
     "language": "TypeScript",
     "test_framework": "ts-jest",
     "gen_dir": "gen",
-    "src_dir": "C:\\Users\\111967\\Projects\\Estudo\\test",
+    "src_dir": "../Solution/",
     "solucao_gerada": False
 }
 config = {"configurable": {"thread_id": "1"}}
@@ -43,10 +43,12 @@ workflow.set_entry_point("planner")
 workflow.add_edge("planner", "developer")
 workflow.add_edge("developer", "persistence")
 workflow.add_edge("persistence", "tester")
+
+# workflow.set_entry_point("tester")
 workflow.add_edge("tester", "reviewer")
 workflow.add_edge("reviewer", END)
 
-# Lógica Condicional (O "Coração" do seu fluxo)
+## Lógica Condicional (O "Coração" do seu fluxo)
 def route_after_test(state):
     if state["success"]:
         return "reviewer"
@@ -77,4 +79,4 @@ if resultado_final["success"]:
     # print(resultado_final)
 else:
     print("❌ O fluxo atingiu o limite de tentativas ou falhou.")
-    print(resultado_final)
+    # print(resultado_final)

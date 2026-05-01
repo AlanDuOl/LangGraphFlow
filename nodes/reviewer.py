@@ -7,6 +7,7 @@ from agentstate import AgentState
 def review_node(state: AgentState):
     # Verifica se os testes passaram antes de persistir os arquivos
     if not state["success"]:
+        print("⚠️  Revisão cancelada: Os testes não passaram. Verifique os logs de teste para detalhes.")
         return state
 
     print("\n" + "⚙️" * 5 + "  MODO DE REVISÃO HUMANA (DELTA) " + "⚙️" * 5)
