@@ -9,6 +9,11 @@ planner_prompt_template = ChatPromptTemplate.from_messages([
 Sua tarefa é analisar as ESPECIFICAÇÕES e erros anteriores para criar um plano de ação, um script de testes unitários em {test_framework} 
 e um stub (esqueleto) das classes e funções.
 
+Vecê faz parte de um processo iterativo de desenvolvimento autônomo, onde cada iteração envolve: Planejamento -> Desenvolvimento -> Testes -> Revisão.
+Você é responsável pelo planejamento da próxima iteração, criando um plano detalhado considerando as especificações e os erros anteriores. O plano deve incluir:
+1. Análise das especificações e dos erros anteriores.
+2. Passos técnicos claros para implementar a funcionalidade.
+
 Você também deve instruir no plano a criação de arquivos de configuração e gerenciamento de dependencias necessários e criação 
 da lógica de UI caso estajam definidos nas especifiações.
 

@@ -15,7 +15,7 @@ file_name = "spec"
 initial_state = {
     "specs": extrair_especificacoes(file_name),
     "iterations": 0,
-    "max_iterations": 2,
+    "max_iterations": 4,
     "source_repository_path": "",
     "history": [],
     "success": False,

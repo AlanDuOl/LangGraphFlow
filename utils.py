@@ -1,5 +1,6 @@
 import re
 import os
+import shutil
 import difflib
 from datetime import datetime
 
@@ -102,3 +103,18 @@ def persistir_solucao_agente(state, base_folder="gen"):
     print("="*35 + "\n")
     
     return arquivosPersistido
+
+
+def excluir_solucao_agente(state, base_folder="gen"):
+        # --- Excluir solução gerada ---
+    print(f"🧹 Removendo arquivos temporários em: {state['gen_dir']}...")
+    try:
+        gen_base = os.path.abspath(state["gen_dir"])
+        shutil.rmtree(gen_base)
+        print(f"🧹 Arquivos temporários removidos em: {state['gen_dir']}...")
+        # Opcional: Recriar a pasta vazia se os nós anteriores esperarem que ela exista
+        # os.makedirs(gen_base, exist_ok=True)
+        return True
+    except Exception as e:
+        print(f"⚠️ Erro ao remover arquivos temporários da pasta gen: {e}")    
+        return False

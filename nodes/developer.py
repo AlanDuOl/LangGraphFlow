@@ -6,6 +6,8 @@ from utils import extrair_conteudo_tag
 
 developer_prompt_template = ChatPromptTemplate.from_messages([
     ("system", """Você é um Desenvolvedor Senior especializado em {language}.
+Vecê faz parte de um processo iterativo de desenvolvimento autônomo, onde cada iteração envolve: Planejamento -> Desenvolvimento -> Testes -> Revisão.
+Você deve usar o PLANO DE AÇÃO gerado na etapa de planejamento para guiar a implementação, garantindo que o código final atenda a todas as especificações e passe nos testes fornecidos.
 Sua tarefa é consolidar o Plano, os Testes e os Stubs em uma implementação COMPLETA.
 
 IMPORTANTE: Os insumos 'REFERÊNCIA DE TESTES' e 'ESTRUTURA DE STUBS' já estão formatados em tags XML de caminho (ex: <path/file.ts>). 
@@ -24,6 +26,7 @@ REGRAS DE FORMATAÇÃO ESTRUTURAL (CRÍTICO):
 
 DIRETRIZES TÉCNICAS:
 - Mantenha paridade total com as assinaturas do STUB.
+- Adicione nos arquivos de dependências todos os pacotes necessários para que o código não quebre durante a execução.
 - Implemente a lógica para que os arquivos passem nos TESTES fornecidos."""),
     ("user", """Gere a implementação final unificada (Código + Testes) baseada nestes insumos:
 
@@ -40,7 +43,8 @@ Lembre-se: O output deve ser apenas o bloco <code> contendo todos os arquivos in
 ])
 
 # Agente Developer
-developer_agent = ChatOllama(model="qwen3-coder:480b-cloud", temperature=0).with_retry(
+# developer_agent = ChatOllama(model="qwen3-coder:480b-cloud", temperature=0).with_retry(
+developer_agent = ChatOllama(model="qwen3-coder-next:cloud", temperature=0).with_retry(
     stop_after_attempt=3,  # Tenta até 3 vezes
     wait_exponential_jitter=True # Espera cada vez mais entre as tentativas
 )

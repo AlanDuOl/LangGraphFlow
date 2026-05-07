@@ -1,20 +1,26 @@
-# from typing import TypedDict, List, Annotated
-# import operator
-from typing import TypedDict
+from typing import Annotated, TypedDict
+import operator
+
+# Função para substituir o valor antigo pelo novo
+def replace(old, new):
+    return new
 
 class AgentState(TypedDict):
     specs: str
-    plan: str
-    code: str
-    stub: str
-    test_code: str
-    test_results: str
+    plan: Annotated[str, replace] # Usa a função de substituição
+    code: Annotated[str, replace]
+    stub: Annotated[str, replace]
+    test_code: Annotated[str, replace]
+    test_results: Annotated[str, replace]
     test_framework: str
     language: str
-    iterations: int
-    max_iterations: int = 3
-    success: bool
-    history: list
+    iterations: Annotated[int, replace]
+    max_iterations: int 
+    success: Annotated[bool, replace]
+    
+    # Para o history, operator.add funciona perfeitamente pois recebe (list1, list2)
+    history: Annotated[list, operator.add]
+    
     gen_dir: str
     src_dir: str
-    solucao_gerada: bool
+    solucao_gerada: Annotated[bool, replace]

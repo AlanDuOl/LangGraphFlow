@@ -1,7 +1,7 @@
 import os
 import difflib
-import shutil
 from agentstate import AgentState
+from utils import excluir_solucao_agente
 
 
 def review_node(state: AgentState):
@@ -78,14 +78,7 @@ def review_node(state: AgentState):
         print("✔️  Sincronização concluída!")
         
         # --- Excluir solução gerada ---
-        print(f"🧹 Removendo arquivos temporários em: {state['gen_dir']}...")
-        try:
-            shutil.rmtree(gen_base)
-            print(f"🧹 Arquivos temporários removidos em: {state['gen_dir']}...")
-            # Opcional: Recriar a pasta vazia se os nós anteriores esperarem que ela exista
-            # os.makedirs(gen_base, exist_ok=True)
-        except Exception as e:
-            print(f"⚠️ Erro ao limpar pasta gen: {e}")
+        excluir_solucao_agente(state, state['gen_dir'])
             
         state["success"] = True
     else:

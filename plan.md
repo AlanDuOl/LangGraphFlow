@@ -10,6 +10,7 @@ For a 12GB VRAM setup, you want models that balance reasoning depth with memory 
         Why: Qwen3-Coder models are currently outperforming almost everything in the open-weight space for pure syntax accuracy and repository-level understanding.
         - ollama run qwen3-coder:30b
         - ollama run qwen3-coder:480b-cloud
+        - qwen3-coder-next:cloud
     - The Tester (Utility LLM): Llama-3.3-8B.
         Why: You need a fast, lightweight model to generate the random test data and the unit test templates. Using a massive model here is overkill and slows down the loop.
         - ollama run phi4-mini (precision)
