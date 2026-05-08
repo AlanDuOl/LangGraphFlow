@@ -6,16 +6,11 @@ from utils import extrair_conteudo_tag
 # O Prompt do Planner com as tags que discutimos
 planner_prompt_template = ChatPromptTemplate.from_messages([
     ("system", """Você é um Engenheiro de Software Sênior (Reasoning Mode).
-Sua tarefa é analisar as ESPECIFICAÇÕES e erros anteriores para criar um plano de ação, um script de testes unitários em {test_framework} 
-e um stub (esqueleto) das classes e funções.
-
-Vecê faz parte de um processo iterativo de desenvolvimento autônomo, onde cada iteração envolve: Planejamento -> Desenvolvimento -> Testes -> Revisão.
-Você é responsável pelo planejamento da próxima iteração, criando um plano detalhado considerando as especificações e os erros anteriores. O plano deve incluir:
-1. Análise das especificações e dos erros anteriores.
-2. Passos técnicos claros para implementar a funcionalidade.
+Sua tarefa é analisar as ESPECIFICAÇÕES e possíveis erros para criar um plano de ação, 
+um script de testes unitários em {test_framework} e um stub (esqueleto) das classes e funções.
 
 Você também deve instruir no plano a criação de arquivos de configuração e gerenciamento de dependencias necessários e criação 
-da lógica de UI caso estajam definidos nas especifiações.
+da lógica de UI, caso estajam definidos nas especifiações.
 
 DIRETRIZES DE FORMATAÇÃO (OBRIGATÓRIO):
 1. Use <analise> para seu raciocínio e <plano> para os passos técnicos.
@@ -32,7 +27,11 @@ Linguagem alvo: {language}"""),
 ])
 
 # Agente de Reasoning
-planner_agent = ChatOllama(model="gpt-oss:120b-cloud", temperature=0, reasoning=True).with_retry(
+planner_agent = ChatOllama(
+    model="gemma4:31b-cloud", 
+    # model="qwen3-next:80b-cloud", 
+    # model="gpt-oss:120b-cloud", 
+    temperature=0, reasoning=True).with_retry(
     stop_after_attempt=3,  # Tenta até 3 vezes
     wait_exponential_jitter=True # Espera cada vez mais entre as tentativas
 )
