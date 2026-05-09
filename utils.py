@@ -118,3 +118,11 @@ def excluir_solucao_agente(state, base_folder="gen"):
     except Exception as e:
         print(f"⚠️ Erro ao remover arquivos temporários da pasta gen: {e}")    
         return False
+
+
+def trim_history(history: list, limit: int = 5):
+    # Mantém apenas as últimas 'limit' mensagens
+    # Mas preserva a primeira mensagem (geralmente a instrução original)
+    if len(history) <= limit:
+        return history
+    return [history[0]] + history[-(limit-1):]

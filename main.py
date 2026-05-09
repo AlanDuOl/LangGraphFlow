@@ -1,4 +1,5 @@
 from langgraph.graph import StateGraph, END
+from langgraph.checkpoint.memory import MemorySaver
 from agentstate import AgentState
 from nodes.planner import planner_node
 from nodes.developer import developer_node
@@ -15,7 +16,7 @@ file_name = "spec"
 initial_state = {
     "specs": extrair_especificacoes(file_name),
     "iterations": 0,
-    "max_iterations": 4,
+    "max_iterations": 2,
     "source_repository_path": "",
     "history": [],
     "success": False,
@@ -43,30 +44,45 @@ workflow.set_entry_point("planner")
 workflow.add_edge("planner", "developer")
 workflow.add_edge("developer", "persistence")
 workflow.add_edge("persistence", "tester")
-
-# workflow.set_entry_point("tester")
 workflow.add_edge("tester", "reviewer")
 workflow.add_edge("reviewer", END)
 
 ## Lógica Condicional (O "Coração" do seu fluxo)
 def route_after_test(state):
+    # 1. Sucesso total
     if state["success"]:
         return "reviewer"
+    
+    # 2. Limite de tentativas atingido
     if state["iterations"] >= state["max_iterations"]:
         return "fail"
-    return "retry"
+
+    # 3. Captura de erros de compilação ou contrato
+    logs = state.get("test_results", "")
+    
+    # Verifica se existe o padrão "error TS" ou outros erros estruturais
+    if "error TS" in logs or "ReferenceError" in logs or "Error" in logs:
+        print("🚨 Erro de compilação/contrato detectado (TypeScript). Voltando para o PLANNER.")
+        return "retry_planner"
+    
+    # 4. Erros de lógica (ex: o teste rodou mas o valor foi diferente)
+    # Nesse caso, tentamos o Developer novamente
+    print("⚠️ Falha nos testes de lógica. Tentando correção via DEVELOPER.")
+    return "retry_developer"
 
 workflow.add_conditional_edges(
     "tester",
     route_after_test,
     {
         "reviewer": "reviewer",
-        "retry": "planner", # Ou volta para o "developer" dependendo da estratégia
+        "retry_planner": "planner",
+        "retry_developer": "developer",
         "fail": END
     }
 )
 
-app = workflow.compile()
+memory = MemorySaver()
+app = workflow.compile(checkpointer=memory)
 
 # Execução
 print("🚀 Iniciando o fluxo de desenvolvimento autônomo...")

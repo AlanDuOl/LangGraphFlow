@@ -19,9 +19,6 @@ def tester_node(state: AgentState):
     # O agente testador poderia gerar os testes aqui, 
     # ou você pode ter testes fixos dependendo do objetivo.
     success, logs = run_isolated_tests_from_folder("gen")
-    
-    if not success:
-        print(f"Erro nos testes: {logs}")
 
     return {
         "test_results": logs,
@@ -53,41 +50,13 @@ def run_isolated_tests_from_folder(source_folder_path: str):
             remove=True
         )
         return True, container_output.decode('utf-8')
-
-        # print("--- [DOCKER] Container iniciado. Monitorando logs... ---")
-    
-        # # Monitor logs with a manual timeout
-        # start_time = time.time()
-        # timeout = 120  # 2 minutes max
-        # full_output = ""
-
-        # while True:
-        #     chunk = container.logs(stdout=True, stderr=True).decode('utf-8')
-        #     # Printing logs in real-time helps you see exactly where it hangs
-        #     if chunk:
-        #         print(chunk)
-        #         full_output = chunk
-            
-        #     # Check if finished
-        #     status = client.containers.get(container.id).status
-        #     if status == 'exited':
-        #         break
-                
-        #     if time.time() - start_time > timeout:
-        #         print("--- [ERRO] Timeout atingido! Matando container... ---")
-        #         container.kill()
-        #         return False, "Timeout: Os testes demoraram mais de 2 minutos."
-                
-        #     time.sleep(2)
-
-        # return True, full_output
     
     except docker.errors.ContainerError as e:
         # In Jest, a failing test returns a non-zero exit code, triggering this error
         print(f"Testes falharam com código de saída {e.exit_status}. Logs dos testes:\n{e.stderr.decode('utf-8')}")
         return False, e.stderr.decode('utf-8')
     except Exception as e:
-        print(f"Erro inesperado: {e}")
+        print(f"Erro inesperado nos testes: {e}")
         return False, str(e)
 
 
