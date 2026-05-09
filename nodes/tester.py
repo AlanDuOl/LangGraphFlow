@@ -31,10 +31,11 @@ def run_isolated_tests_from_folder(source_folder_path: str):
     absolute_folder_path = os.path.abspath(source_folder_path)
     
     if not os.path.exists(absolute_folder_path):
-        return False, f"Erro: O diretório {absolute_folder_path} não existe."
+        return False, f"O diretório {absolute_folder_path} não existe."
 
-    if not prepare_dependencies(absolute_folder_path):
-        return False, "Falha ao preparar dependências no host."
+    success, logs = prepare_dependencies(absolute_folder_path)
+    if not success:
+        return False, logs
 
     try:
         client = docker.from_env()
@@ -74,7 +75,7 @@ def prepare_dependencies(folder_path):
             text=True
         )
         print("--- [HOST] Dependências instaladas com sucesso. ---")
-        return True
+        return True, "Dependências instaladas com sucesso."
     except subprocess.CalledProcessError as e:
         print(f"--- [ERRO] Falha no npm install: {e.stderr} ---")
-        return False
+        return False, str(e)

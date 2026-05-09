@@ -22,6 +22,12 @@ DIRETRIZES DE FORMATAÇÃO (OBRIGATÓRIO):
 3. PROIBIDO: Não use blocos de código Markdown (```ts). Apenas as tags de caminho.
 4. Use Clean Architecture e evite magic numbers.
 
+IMPORTANTE: 
+    - O plano que você criar será enviado para um agente Developer (LLM), que irá implementar o código baseado nesse plano.
+    - Antes de devolver o plano, verifique se ele atende todas as especificações e se é viável. Se não for, ajuste o plano para que seja.
+    - Garanta que todas as classes, funções e propriedades mencionadas nos testes existam no stub, mesmo que sejam apenas declarações vazias. O Developer irá preencher a lógica depois.
+    - Lembre-se de que o plano deve ser detalhado o suficiente para que uma LLM possa implementá-lo sem precisar de mais informações.
+
 Linguagem alvo: {language}"""),
 # Adicionamos o histórico de mensagens para manter a memória da conversa se necessário
 MessagesPlaceholder(variable_name="history"), 

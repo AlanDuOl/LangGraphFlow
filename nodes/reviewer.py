@@ -1,4 +1,5 @@
 import os
+import shutil
 import difflib
 from agentstate import AgentState
 from utils import excluir_solucao_agente
@@ -69,12 +70,15 @@ def review_node(state: AgentState):
     
     if confirmacao.lower() == 's':
         for p_gen, p_src in files_to_sync:
+            # Pula se for algo que não deveria estar aqui (segurança extra)
+            if "node_modules" in p_gen or p_gen.endswith(('.exe', '.dll', '.bin')):
+                continue
+                
             os.makedirs(os.path.dirname(p_src), exist_ok=True)
-            # Usar shutil ou escrita direta
-            with open(p_gen, 'r', encoding='utf-8') as f_gen:
-                content = f_gen.read()
-                with open(p_src, 'w', encoding='utf-8') as f_src:
-                    f_src.write(content)
+            
+            # Copia o arquivo sem tentar decodificar o conteúdo
+            shutil.copy2(p_gen, p_src)
+
         print("✔️  Sincronização concluída!")
         
         # --- Excluir solução gerada ---
