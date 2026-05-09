@@ -61,7 +61,7 @@ def route_after_test(state):
     logs = state.get("test_results", "")
     
     # Verifica se existe o padrão "error TS" ou outros erros estruturais
-    if "error TS" in logs or "ReferenceError" in logs or "Error" in logs:
+    if "error" in logs or "ReferenceError" in logs or "Error" in logs:
         print("🚨 Erro de compilação/contrato detectado (TypeScript). Voltando para o PLANNER.")
         return "retry_planner"
     
