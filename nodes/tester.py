@@ -78,4 +78,4 @@ def prepare_dependencies(folder_path):
         return True, "Dependências instaladas com sucesso."
     except subprocess.CalledProcessError as e:
         print(f"--- [ERRO] Falha no npm install: {e.stderr} ---")
-        return False, str(e)
+        return False, str(e.stderr)
