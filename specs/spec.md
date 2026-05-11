@@ -41,9 +41,8 @@ Regras de Importação:
     - Crio o arquivo index.tsx como ponto de partida do componentes .tsx.
     - Se usar arquivos .css configure o typescript para reconhecer esse tipo de extensão criando um arquivo de tipos.
     - Crie o arquivo package.json com as configurações de execução e gerenciamento de dependencias.
-    - Adicione os pacotes ts-node, jest-environment-jsdom e testing-library/jest-dom no arquivo package.json.
-    - Instrua no plano de desenvolvimento que todos as dependências (pacotes e libs) usadas na implementação 
-        sejam incluídas no arquivo package.json como último passo do plano.
+    - Além das denpendência que achar necessárias, adicione também as seguintes dependência no package.json: ts-node, jest-environment-jsdom e testing-library/jest-dom.
+    - Instrua no plano de desenvolvimento que todos as dependências (pacotes e libs) usadas na implementação sejam incluídas no arquivo package.json como último passo do plano.
     - Crie o arquivo de configurações do TypeScript:
         - Configure no arquivo tsconfig o alias @/ para se refererir a pasta src.
     - Crie apenas o arquivo de configurações jest.config.ts para execução dos testes unitários pelo jest.

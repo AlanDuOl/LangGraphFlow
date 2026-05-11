@@ -46,6 +46,7 @@ Se for a primeira iteração, crie o plano do zero.
 # Agente de Reasoning
 planner_agent = ChatOllama(
     model="gemma4:31b-cloud", 
+    # model="nemotron-3-super:cloud", 
     # model="qwen3-next:80b-cloud", 
     # model="gpt-oss:120b-cloud", 
     temperature=0, reasoning=True).with_retry(

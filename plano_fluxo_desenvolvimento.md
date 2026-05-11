@@ -150,6 +150,18 @@ Recriar dependencias do ambiente:
 No seu ambiente virtual, instale a biblioteca:
     pip install docker
 
+Subir o langfuse localmente:
+export LANGFUSE_SECRET_KEY="sk-lf-97db1aba-2527-4157-bcda-10a34c281a64"
+export LANGFUSE_PUBLIC_KEY="pk-lf-cd471b7c-cb34-4c83-bf24-0e7700329eba"
+export LANGFUSE_BASE_URL="http://localhost:3000"
+
+git clone https://github.com/langfuse/langfuse.git
+cd langfuse
+docker-compose up -d
+
+To use with agents:
+Install the Langfuse AI skill from github.com/langfuse/skills and use it to add tracing to this application with Langfuse following best practices.
+
 ### 2. Estrutura de Execução Isolada
 
 A ideia é: o Agente Developer salva o código em uma pasta, e o Docker monta essa pasta como um volume.

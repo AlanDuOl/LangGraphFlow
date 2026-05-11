@@ -1,5 +1,6 @@
 from langgraph.graph import StateGraph, END
 from langgraph.checkpoint.memory import MemorySaver
+from langfuse.langchain import CallbackHandler
 from agentstate import AgentState
 from nodes.planner import planner_node
 from nodes.developer import developer_node
@@ -26,7 +27,11 @@ initial_state = {
     "src_dir": "../Solution/",
     "solucao_gerada": False
 }
-config = {"configurable": {"thread_id": "1"}}
+
+langfuse_handler = CallbackHandler(
+    public_key="pk-lf-cd471b7c-cb34-4c83-bf24-0e7700329eba"
+)
+config = {"configurable": {"thread_id": "1"}, "callbacks": [langfuse_handler]}
 
 
 # Definição do fluxo
