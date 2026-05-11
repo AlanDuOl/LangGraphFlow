@@ -28,9 +28,7 @@ initial_state = {
     "solucao_gerada": False
 }
 
-langfuse_handler = CallbackHandler(
-    public_key="pk-lf-cd471b7c-cb34-4c83-bf24-0e7700329eba"
-)
+langfuse_handler = CallbackHandler()
 config = {"configurable": {"thread_id": "1"}, "callbacks": [langfuse_handler]}
 
 

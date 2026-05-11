@@ -106,17 +106,23 @@ def persistir_solucao_agente(state, base_folder="gen"):
 
 
 def excluir_solucao_agente(state, base_folder="gen"):
-        # --- Excluir solução gerada ---
-    print(f"🧹 Removendo arquivos temporários em: {state['gen_dir']}...")
+    print(f"🧹 Limpando conteúdo em: {state['gen_dir']}...")
     try:
         gen_base = os.path.abspath(state["gen_dir"])
-        shutil.rmtree(gen_base)
-        print(f"🧹 Arquivos temporários removidos em: {state['gen_dir']}...")
-        # Opcional: Recriar a pasta vazia se os nós anteriores esperarem que ela exista
-        # os.makedirs(gen_base, exist_ok=True)
+        
+        # Verifica se a pasta existe antes de tentar listar
+        if os.path.exists(gen_base):
+            for item in os.listdir(gen_base):
+                item_path = os.path.join(gen_base, item)
+                if os.path.isfile(item_path) or os.path.islink(item_path):
+                    os.unlink(item_path)  # Remove arquivo ou link simbólico
+                elif os.path.isdir(item_path):
+                    shutil.rmtree(item_path) # Remove subpasta
+            
+            print(f"✨ Conteúdo de {state['gen_dir']} removido. Pasta preservada.")
         return True
     except Exception as e:
-        print(f"⚠️ Erro ao remover arquivos temporários da pasta gen: {e}")    
+        print(f"⚠️ Erro ao limpar a pasta gen: {e}")    
         return False
 
 
